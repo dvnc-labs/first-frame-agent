@@ -4,6 +4,8 @@
 
 Turn rough product notes into a 9:16 first frame, motion prompt, caption beats, and QA checklist.
 
+![First Frame Agent social preview](assets/og.png)
+
 ## Features
 
 - Converts a messy product, service, or creator note into one decisive vertical first-frame direction.

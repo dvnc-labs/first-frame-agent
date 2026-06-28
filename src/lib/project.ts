@@ -5,6 +5,7 @@ export const project = {
 	tagline:
 		"Turn a rough product or creator note into a 9:16 first frame, motion prompt, caption beats, and QA checklist.",
 	repoUrl: "https://github.com/dvnc-labs/first-frame-agent",
+	siteUrl: "https://first-frame-agent.vercel.app",
 	authorUrl:
 		"https://omidsaffari.com/?utm_source=first-frame-agent&utm_medium=oss-demo&utm_campaign=labs",
 } as const;
