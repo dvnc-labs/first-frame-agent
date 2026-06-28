@@ -1,0 +1,67 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # gitleaks scans a commit range; it needs full history, not a shallow clone
+
+      - name: Detect scaffold
+        id: scaffold
+        run: |
+          if [ -f .ai-app-starter-template ]; then
+            echo "is_template=true" >> "$GITHUB_OUTPUT"
+            echo "Unfilled scaffold — release package gate skipped."
+          else
+            echo "is_template=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+          cache: false
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Build
+        run: bun run build
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Secret scan
+        run: |
+          go install github.com/zricethezav/gitleaks/v8@latest
+          "$HOME/go/bin/gitleaks" detect --source . --redact --verbose
+
+      - name: Install Playwright browser
+        run: bunx playwright install --with-deps chromium
+
+      - name: BYOK no-leak + smoke test
+        run: bun run test
+
+      - name: Validate package surface
+        if: steps.scaffold.outputs.is_template == 'false'
+        run: |
+          for file in README.md CODE_OF_CONDUCT.md CONTRIBUTING.md CHANGELOG.md LICENSE assets/og.html assets/og.png; do
+            test -s "$file" || { echo "::error::$file is required"; exit 1; }
+          done
+          size=$(wc -c < assets/og.png)
+          if [ "$size" -gt 1048576 ]; then
+            echo "::error::assets/og.png must be under 1MB"; exit 1
+          fi
