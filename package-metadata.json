@@ -1,0 +1,56 @@
+{
+	"title": "First Frame Agent",
+	"tagline": "Turn rough product notes into a 9:16 first frame, motion prompt, caption beats, and QA checklist.",
+	"type": "BYOK agent app",
+	"description": "A narrow bring-your-own-key agent demo for creators and product marketers who need a strong opening frame before sending a prompt into image-to-video tools.",
+	"features": [
+		"Converts a messy product, service, or creator note into one decisive vertical first-frame direction.",
+		"Packages the output as an opening frame recipe, image prompt, motion prompt, caption beats, negative prompt, and QA checklist.",
+		"Uses the visitor's selected provider key per request, with OpenAI models able to render the frame through the hosted image generation tool."
+	],
+	"quick_start": [
+		{
+			"title": "Clone the app",
+			"code": "git clone https://github.com/dvnc-labs/first-frame-agent && cd first-frame-agent"
+		},
+		{
+			"title": "Run locally",
+			"code": "bun install\nbun run dev"
+		},
+		{
+			"title": "Use your key",
+			"code": "open http://localhost:3000\n# Paste your own OpenAI, Anthropic, or Google AI key in the app"
+		}
+	],
+	"architecture": [
+		"Next.js renders a one-page frame-building workflow with provider selection and a BYOK key gate.",
+		"The browser keeps the visitor key in session storage and sends it only to the same-origin /api/run route as x-provider-key.",
+		"The route builds the selected provider client from that request key, streams the director board, and exposes image generation only when the selected OpenAI model supports it.",
+		"No author-owned inference key is stored, logged, proxied as fallback, or required for runtime use."
+	],
+	"configuration": [
+		"No server API key is required for local use.",
+		"Visitors bring their own OpenAI, Anthropic, or Google AI key.",
+		"OpenAI image-capable models can render the first-frame concept image; text-only providers return the structured slate."
+	],
+	"development": [
+		"bun install",
+		"bun run lint",
+		"bun run typecheck",
+		"bun run build",
+		"PORT=3219 bun run test"
+	],
+	"built_with": [
+		"Next.js 16",
+		"React 19",
+		"AI SDK BYOK transport",
+		"OpenAI Responses image generation tool",
+		"shadcn-compatible Base UI primitives",
+		"Omid Saffari Labs ai-app-starter"
+	],
+	"distribution": [
+		"Launch as a public dvnc-labs BYOK demo after GitHub Actions passes.",
+		"Share with image-to-video, UGC, product marketing, and creator workflow communities.",
+		"Use the generated assets/og.png as the GitHub social preview."
+	]
+}
